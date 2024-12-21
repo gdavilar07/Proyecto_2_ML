@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/jcboc/Desktop/Python%202024/TMIR/Proyecto_2_ML/mlruns/838663852380484093/1515d007f8654dcdae74cbbf855bbda2/artifacts
+end_time: 1734756299998
+entry_point_name: ''
+experiment_id: '838663852380484093'
+lifecycle_stage: active
+run_id: 1515d007f8654dcdae74cbbf855bbda2
+run_name: Predicciones_HeartDisease
+run_uuid: 1515d007f8654dcdae74cbbf855bbda2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1734756299952
+status: 3
+tags: []
+user_id: jcboc
