@@ -1,14 +1,14 @@
-import os
-from datetime import datetime
-import pandas as pd
-import joblib
-import mlflow
-
 """
 Módulo para realizar predicciones utilizando un pipeline entrenado.
 Este script carga un pipeline entrenado, realiza predicciones
 y registra los resultados en MLflow.
 """
+
+import os
+from datetime import datetime
+import pandas as pd
+import joblib
+import mlflow
 
 # Definir rutas y configuraciones
 RUTA_DATOS_PRUEBA = (
