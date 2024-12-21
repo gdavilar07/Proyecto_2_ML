@@ -3,6 +3,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
 import joblib
 
 # Definir las rutas para los datos de entrada y almacenamiento de artefactos
@@ -54,8 +56,17 @@ def crear_pipeline_base():
     Retorna:
         sklearn.pipeline.Pipeline: Pipeline configurado.
     """
+    columnas_categoricas = ['sex', 'chest_pain_type', 'fasting_blood_sugar', 'rest_ecg', 
+                            'exercise_induced_angina', 'slope', 'vessels_colored_by_flourosopy', 'thalassemia']
+    columnas_numericas = ['age', 'resting_blood_pressure', 'cholestoral', 'Max_heart_rate', 'oldpeak']
+    
+    preprocesador = ColumnTransformer([
+        ('cat', OneHotEncoder(), columnas_categoricas),
+        ('num', StandardScaler(), columnas_numericas)
+    ])
+    
     pipeline = Pipeline([
-        ('escalador', StandardScaler()),
+        ('preprocesador', preprocesador),
     ])
     return pipeline
 
