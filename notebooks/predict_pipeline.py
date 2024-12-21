@@ -10,13 +10,11 @@ import pandas as pd
 import joblib
 import mlflow
 
-# Definir rutas y configuraciones
-RUTA_DATOS_PRUEBA = (
-    r"C:\Users\jcboc\Desktop\Python 2024\TMIR\Proyecto_2_ML"
-    r"\data\raw\HeartDiseaseTrain-Test.csv"
-)  # Ruta de los datos
-CARPETA_ARTEFACTOS = "artefactos"
-CARPETA_PREDICCIONES = "data/predictions"
+# Definir rutas absolutas
+BASE_DIR = r"C:\Users\jcboc\Desktop\Python 2024\TMIR\Proyecto_2_ML"
+RUTA_DATOS_PRUEBA = os.path.join(BASE_DIR, "data", "raw", "HeartDiseaseTrain-Test.csv")
+CARPETA_ARTEFACTOS = os.path.join(BASE_DIR, "artefactos")
+CARPETA_PREDICCIONES = os.path.join(BASE_DIR, "data", "predictions")
 NOMBRE_PIPELINE_ENTRENADO = "pipeline_entrenado.pkl"
 
 # Asegurarse de que las carpetas necesarias existan
@@ -79,15 +77,12 @@ if __name__ == "__main__":
     # Crear un DataFrame con las predicciones
     resultados = pd.DataFrame({"predicciones": predicciones})
 
-    # Generar una subcarpeta única basada en el timestamp
+    # Generar el nombre del archivo con la fecha y hora actuales
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    subcarpeta_predicciones = os.path.join(CARPETA_PREDICCIONES, timestamp)
-    os.makedirs(subcarpeta_predicciones, exist_ok=True)
-
-    # Guardar el archivo en la subcarpeta
     nombre_archivo = f"predicciones_{timestamp}.csv"
-    ruta_archivo = os.path.join(subcarpeta_predicciones, nombre_archivo)
+    ruta_archivo = os.path.join(CARPETA_PREDICCIONES, nombre_archivo)
 
+    # Guardar las predicciones en un archivo CSV
     resultados.to_csv(ruta_archivo, index=False)
     print(f"Predicciones guardadas en {ruta_archivo}")
 
