@@ -5,82 +5,82 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import joblib
 
-# Define the paths for input data and artifact storage
-DATA_PATH = "data/input_data.csv"  # Update with your actual data path
-ARTIFACTS_DIR = "artifacts"
-PIPELINE_FILENAME = "base_pipeline.pkl"
+# Definir las rutas para los datos de entrada y almacenamiento de artefactos
+RUTA_DATOS = "../data/raw/HeartDiseaseTrain-Test.csv"  # Actualizar con la ruta real de los datos
+CARPETA_ARTEFACTOS = "artefactos"
+NOMBRE_PIPELINE = "pipeline_base.pkl"
 
-# Ensure the artifacts directory exists
-os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+# Asegurarse de que la carpeta de artefactos exista
+os.makedirs(CARPETA_ARTEFACTOS, exist_ok=True)
 
-def load_data(data_path):
+def cargar_datos(ruta_datos):
     """
-    Load the dataset from the specified path.
+    Cargar el conjunto de datos desde la ruta especificada.
 
-    Parameters:
-        data_path (str): Path to the dataset file.
+    Parámetros:
+        ruta_datos (str): Ruta al archivo del conjunto de datos.
 
-    Returns:
-        pd.DataFrame: Loaded dataset.
+    Retorna:
+        pd.DataFrame: Conjunto de datos cargado.
     """
     try:
-        data = pd.read_csv(data_path)
-        return data
+        datos = pd.read_csv(ruta_datos)
+        return datos
     except FileNotFoundError:
-        raise Exception(f"The file at {data_path} was not found.")
+        raise Exception(f"El archivo en {ruta_datos} no fue encontrado.")
 
-def split_data(data, target_column, test_size=0.2, random_state=42):
+def dividir_datos(datos, columna_objetivo, proporcion_prueba=0.2, semilla=42):
     """
-    Split the dataset into training and testing sets.
+    Dividir el conjunto de datos en entrenamiento y prueba.
 
-    Parameters:
-        data (pd.DataFrame): The dataset to split.
-        target_column (str): The name of the target column.
-        test_size (float): The proportion of the dataset to include in the test split.
-        random_state (int): Random state for reproducibility.
+    Parámetros:
+        datos (pd.DataFrame): El conjunto de datos a dividir.
+        columna_objetivo (str): El nombre de la columna objetivo.
+        proporcion_prueba (float): La proporción del conjunto de prueba.
+        semilla (int): Semilla para reproducibilidad.
 
-    Returns:
-        tuple: X_train, X_test, y_train, y_test
+    Retorna:
+        tuple: X_entrenamiento, X_prueba, y_entrenamiento, y_prueba
     """
-    X = data.drop(columns=[target_column])
-    y = data[target_column]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-    return X_train, X_test, y_train, y_test
+    X = datos.drop(columns=[columna_objetivo])
+    y = datos[columna_objetivo]
+    X_entrenamiento, X_prueba, y_entrenamiento, y_prueba = train_test_split(X, y, test_size=proporcion_prueba, random_state=semilla)
+    return X_entrenamiento, X_prueba, y_entrenamiento, y_prueba
 
-def create_base_pipeline():
+def crear_pipeline_base():
     """
-    Create a base pipeline for preprocessing.
+    Crear un pipeline base para preprocesamiento.
 
-    Returns:
-        sklearn.pipeline.Pipeline: Configured pipeline.
+    Retorna:
+        sklearn.pipeline.Pipeline: Pipeline configurado.
     """
     pipeline = Pipeline([
-        ('scaler', StandardScaler()),
+        ('escalador', StandardScaler()),
     ])
     return pipeline
 
-def save_pipeline(pipeline, filename):
+def guardar_pipeline(pipeline, nombre_archivo):
     """
-    Save the pipeline to a file.
+    Guardar el pipeline en un archivo.
 
-    Parameters:
-        pipeline (Pipeline): The pipeline to save.
-        filename (str): Path where the pipeline will be saved.
+    Parámetros:
+        pipeline (Pipeline): El pipeline a guardar.
+        nombre_archivo (str): Ruta donde se guardará el pipeline.
     """
-    joblib.dump(pipeline, filename)
+    joblib.dump(pipeline, nombre_archivo)
 
 if __name__ == "__main__":
-    # Load the dataset
-    data = load_data(DATA_PATH)
+    # Cargar el conjunto de datos
+    datos = cargar_datos(RUTA_DATOS)
 
-    # Split the data
-    target_column = "target"  # Replace with your target column name
-    X_train, X_test, y_train, y_test = split_data(data, target_column)
+    # Dividir los datos
+    columna_objetivo = "HeartDisease"  # Reemplazar con el nombre real de la columna objetivo
+    X_entrenamiento, X_prueba, y_entrenamiento, y_prueba = dividir_datos(datos, columna_objetivo)
 
-    # Create the base pipeline
-    base_pipeline = create_base_pipeline()
+    # Crear el pipeline base
+    pipeline_base = crear_pipeline_base()
 
-    # Save the pipeline to the artifacts directory
-    pipeline_path = os.path.join(ARTIFACTS_DIR, PIPELINE_FILENAME)
-    save_pipeline(base_pipeline, pipeline_path)
-    print(f"Base pipeline saved to {pipeline_path}")
+    # Guardar el pipeline en la carpeta de artefactos
+    ruta_pipeline = os.path.join(CARPETA_ARTEFACTOS, NOMBRE_PIPELINE)
+    guardar_pipeline(pipeline_base, ruta_pipeline)
+    print(f"Pipeline base guardado en {ruta_pipeline}")
