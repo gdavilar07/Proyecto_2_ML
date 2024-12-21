@@ -6,6 +6,8 @@ Proyecto-ml-clasificacion
 Project Organization
 ------------
 
+Enlace al Video - https://drive.google.com/file/d/1tJ31qLX5qD0inz3rSWK6mhBn8wLLH36q/view?usp=drive_link
+
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
