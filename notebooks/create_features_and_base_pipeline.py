@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 import joblib
 
 # Definir las rutas para los datos de entrada y almacenamiento de artefactos
-RUTA_DATOS = "../data/raw/HeartDiseaseTrain-Test.csv"  # Actualizar con la ruta real de los datos
+RUTA_DATOS = r"C:\Users\jcboc\Desktop\Python 2024\TMIR\Proyecto_2_ML\data\raw\HeartDiseaseTrain-Test.csv" # Ruta de los datos
 CARPETA_ARTEFACTOS = "artefactos"
 NOMBRE_PIPELINE = "pipeline_base.pkl"
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     datos = cargar_datos(RUTA_DATOS)
 
     # Dividir los datos
-    columna_objetivo = "HeartDisease"  # Reemplazar con el nombre real de la columna objetivo
+    columna_objetivo = "target"  # Nombre correcto de la columna objetivo
     X_entrenamiento, X_prueba, y_entrenamiento, y_prueba = dividir_datos(datos, columna_objetivo)
 
     # Crear el pipeline base
