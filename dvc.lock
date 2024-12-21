@@ -5,8 +5,8 @@ stages:
     deps:
     - path: notebooks/create_features_and_base_pipeline.py
       hash: md5
-      md5: 08bb0087d373dbce67f05a8c7d434403
-      size: 3579
+      md5: e4d931c744d3045b82fd61385866f19f
+      size: 3943
     outs:
     - path: artefactos/pipeline_base.pkl
       hash: md5
@@ -21,8 +21,8 @@ stages:
       size: 912
     - path: notebooks/configure_and_fit_pipeline.py
       hash: md5
-      md5: 4efb0c86688f2ca4287e9efff147380e
-      size: 4054
+      md5: 4a18bed5ec516efc52a1961d8e3a1f32
+      size: 4335
     outs:
     - path: artefactos/pipeline_entrenado.pkl
       hash: md5
@@ -37,11 +37,11 @@ stages:
       size: 1257215
     - path: notebooks/predict_pipeline.py
       hash: md5
-      md5: 7e99f16b494eef64289a4d557cf7f0e9
-      size: 2508
+      md5: b3e8bedeaf543320536933bbb25e7afb
+      size: 3112
     outs:
     - path: data/predictions
       hash: md5
-      md5: ef0fcd4846c3f121932798f45ccba010.dir
+      md5: 50caed44f0904baecb8c35ffc0a0419d.dir
       size: 3089
       nfiles: 1

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/jcboc/Desktop/Python%202024/TMIR/Proyecto_2_ML/mlruns/760544634221731236/f8561c8daf6d4ca19331006f6c644390/artifacts
+end_time: 1734769379797
+entry_point_name: ''
+experiment_id: '760544634221731236'
+lifecycle_stage: active
+run_id: f8561c8daf6d4ca19331006f6c644390
+run_name: RandomForest_Training
+run_uuid: f8561c8daf6d4ca19331006f6c644390
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1734769379700
+status: 3
+tags: []
+user_id: jcboc
