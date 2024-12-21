@@ -1,0 +1,21 @@
+stages:
+  create_features:
+    cmd: python notebooks/create_features_and_base_pipeline.py
+    deps:
+    - notebooks/create_features_and_base_pipeline.py
+    outs:
+    - artefactos/pipeline_base.pkl
+  configure_and_fit:
+    cmd: python notebooks/configure_and_fit_pipeline.py
+    deps:
+    - artefactos/pipeline_base.pkl
+    - notebooks/configure_and_fit_pipeline.py
+    outs:
+    - artefactos/pipeline_entrenado.pkl
+  predict_pipeline:
+    cmd: python notebooks/predict_pipeline.py
+    deps:
+    - artefactos/pipeline_entrenado.pkl
+    - notebooks/predict_pipeline.py
+    outs:
+    - data/predictions
