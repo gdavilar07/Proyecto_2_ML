@@ -1,63 +1,98 @@
+"""
+Módulo para realizar predicciones utilizando un pipeline entrenado.
+Este script carga un pipeline entrenado, realiza predicciones
+y registra los resultados en MLflow.
+"""
+
 import os
+from datetime import datetime
 import pandas as pd
 import joblib
-from datetime import datetime
-from configparser import ConfigParser
 import mlflow
 
 # Definir rutas y configuraciones
-RUTA_DATOS_PRUEBA = r"C:\Users\jcboc\Desktop\Python 2024\TMIR\Proyecto_2_ML\data\raw\HeartDiseaseTrain-Test.csv" # Ruta de los datos
+RUTA_DATOS_PRUEBA = (
+    r"C:\Users\jcboc\Desktop\Python 2024\TMIR\Proyecto_2_ML"
+    r"\data\raw\HeartDiseaseTrain-Test.csv"
+)  # Ruta de los datos
 CARPETA_ARTEFACTOS = "artefactos"
 CARPETA_PREDICCIONES = "data/predictions"
 NOMBRE_PIPELINE_ENTRENADO = "pipeline_entrenado.pkl"
-CONFIG_PATH = "config/config.cfg"
 
 # Asegurarse de que las carpetas necesarias existan
 os.makedirs(CARPETA_PREDICCIONES, exist_ok=True)
 
 def cargar_datos(ruta_datos):
+    """
+    Carga un archivo CSV en un DataFrame.
+
+    Args:
+        ruta_datos (str): Ruta del archivo CSV.
+
+    Returns:
+        pd.DataFrame: Datos cargados en un DataFrame.
+    """
     try:
-        datos = pd.read_csv(ruta_datos)
-        return datos
-    except FileNotFoundError:
-        raise Exception(f"El archivo en {ruta_datos} no fue encontrado.")
+        return pd.read_csv(ruta_datos)
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(f"El archivo en {ruta_datos} no fue encontrado.") from exc
 
 def cargar_pipeline(ruta_pipeline):
-    try:
-        pipeline = joblib.load(ruta_pipeline)
-        return pipeline
-    except FileNotFoundError:
-        raise Exception(f"El archivo en {ruta_pipeline} no fue encontrado.")
+    """
+    Carga un pipeline guardado en un archivo .pkl.
 
-def realizar_predicciones(pipeline, datos_prueba):
-    predicciones = pipeline.predict(datos_prueba)
-    return predicciones
+    Args:
+        ruta_pipeline (str): Ruta del archivo del pipeline.
+
+    Returns:
+        object: Pipeline cargado.
+    """
+    try:
+        return joblib.load(ruta_pipeline)
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(f"El archivo en {ruta_pipeline} no fue encontrado.") from exc
+
+def realizar_predicciones(pipeline, datos):
+    """
+    Realiza predicciones con un pipeline dado.
+
+    Args:
+        pipeline (object): Pipeline cargado.
+        datos (pd.DataFrame): Datos para predicción.
+
+    Returns:
+        np.ndarray: Predicciones generadas.
+    """
+    return pipeline.predict(datos)
 
 if __name__ == "__main__":
     # Cargar los datos de prueba
     datos_prueba = cargar_datos(RUTA_DATOS_PRUEBA)
 
     # Cargar el pipeline entrenado
-    ruta_pipeline_entrenado = os.path.join(CARPETA_ARTEFACTOS, NOMBRE_PIPELINE_ENTRENADO)
-    pipeline_entrenado = cargar_pipeline(ruta_pipeline_entrenado)
+    ruta_pipeline_local = os.path.join(CARPETA_ARTEFACTOS, NOMBRE_PIPELINE_ENTRENADO)
+    pipeline_local = cargar_pipeline(ruta_pipeline_local)
 
     # Realizar predicciones
-    predicciones = realizar_predicciones(pipeline_entrenado, datos_prueba)
+    predicciones = realizar_predicciones(pipeline_local, datos_prueba)
 
     # Crear un DataFrame con las predicciones
     resultados = pd.DataFrame({"predicciones": predicciones})
 
-    # Generar el nombre del archivo con la fecha y hora actuales
+    # Generar una subcarpeta única basada en el timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    nombre_archivo_predicciones = f"predicciones_{timestamp}.csv"
-    ruta_archivo_predicciones = os.path.join(CARPETA_PREDICCIONES, nombre_archivo_predicciones)
+    subcarpeta_predicciones = os.path.join(CARPETA_PREDICCIONES, timestamp)
+    os.makedirs(subcarpeta_predicciones, exist_ok=True)
 
-    # Guardar las predicciones en un archivo CSV
-    resultados.to_csv(ruta_archivo_predicciones, index=False)
-    print(f"Predicciones guardadas en {ruta_archivo_predicciones}")
+    # Guardar el archivo en la subcarpeta
+    nombre_archivo = f"predicciones_{timestamp}.csv"
+    ruta_archivo = os.path.join(subcarpeta_predicciones, nombre_archivo)
+
+    resultados.to_csv(ruta_archivo, index=False)
+    print(f"Predicciones guardadas en {ruta_archivo}")
 
     # Registrar las predicciones en MLflow
-    mlflow.set_experiment("Predicciones")  # Nombre del experimento
-    with mlflow.start_run(run_name="Predicciones_HeartDisease"):  # Nombre personalizado del run
-        mlflow.log_artifact(ruta_archivo_predicciones, artifact_path="predicciones")
-        print(f"Predicciones registradas en MLflow.")
+    mlflow.set_experiment("Predicciones")
+    with mlflow.start_run(run_name="Predicciones_HeartDisease"):
+        mlflow.log_artifact(ruta_archivo, artifact_path="predicciones")
+        print("Predicciones registradas en MLflow.")
